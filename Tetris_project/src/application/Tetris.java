@@ -48,6 +48,7 @@ public class Tetris extends Application {
 		scoretext.setStyle("-fx-font: 20 arial;");
 		scoretext.setY(50);
 		scoretext.setX(XMAX + 5);
+		
 		Text level = new Text("Lines: ");
 		level.setStyle("-fx-font: 20 arial;");
 		level.setY(100);
