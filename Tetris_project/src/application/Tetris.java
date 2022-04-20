@@ -100,7 +100,7 @@ public class Tetris extends Application {
 				});
 			}
 		};
-		fall.schedule(task, 0, 300); 
+		fall.schedule(task, 0, 300);
 	}
 
 	private void moveOnKeyPress(Shapes form) {
