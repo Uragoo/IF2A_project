@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 public class Tetris extends Application {
 	// The variables
 	public static final int MOVE = 25;
+	public static int movespeed;
 	public static final int SIZE = 25;
 	public static int XMAX = SIZE * 10;
 	public static int YMAX = SIZE * 20;
@@ -32,13 +33,11 @@ public class Tetris extends Application {
 	private static boolean game = true;
 	private static Shapes nextObj = Controller.makeRect();
 	private static int linesNo = 0;
-
-	public static void main(String[] args) {
-		launch(args);
-	}
-
-	@Override
-	public void start(Stage stage) throws Exception {
+	
+	public static void startGame(Stage stage){
+		GRID = new int[XMAX / SIZE][YMAX / SIZE];
+		group = new Pane();
+		scene = new Scene(group, XMAX + 150, YMAX);
 		for (int[] a : GRID) {
 			Arrays.fill(a, 0);
 		}
@@ -65,6 +64,23 @@ public class Tetris extends Application {
 		stage.setTitle("TETRIS");
 		stage.show();
 
+		switch(Main.difficulty) {
+		case EASY:
+			movespeed = 1;
+			break;
+		case NORMAL:
+			movespeed = 10;
+			break;
+		case EXPERT:
+			movespeed = 20;
+			break;
+		case HARDCORE:
+			movespeed = 30;
+			break;
+		case LEGEND:
+			movespeed = 40;
+		}
+		
 		Timer fall = new Timer();
 		TimerTask task = new TimerTask() {
 			public void run() {
@@ -88,7 +104,7 @@ public class Tetris extends Application {
 						}
 						// Exit
 						if (top == 15) {
-							System.exit(0);
+							stage.close();
 						}
 
 						if (game) {
@@ -103,7 +119,7 @@ public class Tetris extends Application {
 		fall.schedule(task, 0, 300);
 	}
 
-	private void moveOnKeyPress(Shapes form) {
+	private static void moveOnKeyPress(Shapes form) {
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
@@ -128,7 +144,7 @@ public class Tetris extends Application {
 		});
 	}
 
-	private void MoveTurn(Shapes form) {
+	private static void MoveTurn(Shapes form) {
 		int f = form.form;
 		Rectangle a = form.a;
 		Rectangle b = form.b;
@@ -416,7 +432,7 @@ public class Tetris extends Application {
 		}
 	}
 
-	private void RemoveRows(Pane pane) {
+	private static void RemoveRows(Pane pane) {
 		ArrayList<Node> rects = new ArrayList<Node>();
 		ArrayList<Integer> lines = new ArrayList<Integer>();
 		ArrayList<Node> newrects = new ArrayList<Node>();
@@ -474,28 +490,28 @@ public class Tetris extends Application {
 			} while (lines.size() > 0);
 	}
 
-	private void MoveDown(Rectangle rect) {
+	private static void MoveDown(Rectangle rect) {
 		if (rect.getY() + MOVE < YMAX)
 			rect.setY(rect.getY() + MOVE);
 
 	}
 
-	private void MoveRight(Rectangle rect) {
+	private static void MoveRight(Rectangle rect) {
 		if (rect.getX() + MOVE <= XMAX - SIZE)
 			rect.setX(rect.getX() + MOVE);
 	}
 
-	private void MoveLeft(Rectangle rect) {
+	private static void MoveLeft(Rectangle rect) {
 		if (rect.getX() - MOVE >= 0)
 			rect.setX(rect.getX() - MOVE);
 	}
 
-	private void MoveUp(Rectangle rect) {
+	private static void MoveUp(Rectangle rect) {
 		if (rect.getY() - MOVE > 0)
 			rect.setY(rect.getY() - MOVE);
 	}
 
-	private void MoveDown(Shapes form) {
+	private static void MoveDown(Shapes form) {
 		if (form.a.getY() == YMAX - SIZE || form.b.getY() == YMAX - SIZE || form.c.getY() == YMAX - SIZE
 				|| form.d.getY() == YMAX - SIZE || moveA(form) || moveB(form) || moveC(form) || moveD(form)) {
 			GRID[(int) form.a.getX() / SIZE][(int) form.a.getY() / SIZE] = 1;
@@ -526,23 +542,23 @@ public class Tetris extends Application {
 		}
 	}
 
-	private boolean moveA(Shapes form) {
+	private static boolean moveA(Shapes form) {
 		return (GRID[(int) form.a.getX() / SIZE][((int) form.a.getY() / SIZE) + 1] == 1);
 	}
 
-	private boolean moveB(Shapes form) {
+	private static boolean moveB(Shapes form) {
 		return (GRID[(int) form.b.getX() / SIZE][((int) form.b.getY() / SIZE) + 1] == 1);
 	}
 
-	private boolean moveC(Shapes form) {
+	private static boolean moveC(Shapes form) {
 		return (GRID[(int) form.c.getX() / SIZE][((int) form.c.getY() / SIZE) + 1] == 1);
 	}
 
-	private boolean moveD(Shapes form) {
+	private static boolean moveD(Shapes form) {
 		return (GRID[(int) form.d.getX() / SIZE][((int) form.d.getY() / SIZE) + 1] == 1);
 	}
 
-	private boolean checkBorder(Rectangle rect, int x, int y) {
+	private static boolean checkBorder(Rectangle rect, int x, int y) {
 		boolean xb = false;
 		boolean yb = false;
 		if (x >= 0)
@@ -554,6 +570,12 @@ public class Tetris extends Application {
 		if (y < 0)
 			yb = rect.getY() + y * MOVE < YMAX;
 		return xb && yb && GRID[((int) rect.getX() / SIZE) + x][((int) rect.getY() / SIZE) - y] == 0;
+	}
+
+	@Override
+	public void start(Stage arg0) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
