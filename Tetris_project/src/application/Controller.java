@@ -6,6 +6,7 @@ import javafx.scene.shape.Rectangle;
 public class Controller {
 	// Getting the numbers and the GRID from Tetris
 	public static final int MOVE = Tetris.MOVE;
+	public static int movespeed = Tetris.movespeed;
 	public static final int SIZE = Tetris.SIZE;
 	public static int XMAX = Tetris.XMAX;
 	public static int YMAX = Tetris.YMAX;
@@ -46,8 +47,10 @@ public class Controller {
 	public static Shapes makeRect() {
 		int block = (int) (Math.random() * 100);
 		String name;
-		Rectangle a = new Rectangle(SIZE-1, SIZE-1), b = new Rectangle(SIZE-1, SIZE-1), c = new Rectangle(SIZE-1, SIZE-1),
-				d = new Rectangle(SIZE-1, SIZE-1);
+		Rectangle a = new Rectangle(SIZE-1, SIZE-1);
+		Rectangle b = new Rectangle(SIZE-1, SIZE-1);
+		Rectangle c = new Rectangle(SIZE-1, SIZE-1);
+		Rectangle d = new Rectangle(SIZE-1, SIZE-1);
 		if (block < 15) { 
 			a.setX(XMAX / 2 - SIZE);
 			b.setX(XMAX / 2 - SIZE);

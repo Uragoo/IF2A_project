@@ -1,5 +1,8 @@
 package application;
 
+import java.io.File;
+import java.util.Scanner;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -33,6 +36,14 @@ public class Main extends Application {
 		current_difficulty.setLayoutX(100);
 		current_difficulty.setLayoutY(100);
 		
+		File doc = new File("highscore.txt");
+		Scanner score = new Scanner(doc);
+		Label highscore = new Label("Highscore : " + score.nextLine());
+		highscore.setStyle("-fx-font: 30 arial;");
+		highscore.setLayoutX(100);
+		highscore.setLayoutY(450);
+		score.close();
+		
 		Button play = new Button("Start the Game");
 		play.setPrefSize(300, 50);
 		play.setLayoutX(50);
@@ -49,7 +60,7 @@ public class Main extends Application {
 		difficulty_choice.setLayoutX(50);
 		difficulty_choice.setLayoutY(250);
 		
-		group.getChildren().addAll(title, play, current_difficulty, difficulty_choice);
+		group.getChildren().addAll(title, play, current_difficulty, difficulty_choice, highscore);
 		stage.setScene(scene);
 		stage.setTitle("TETRIS");
 		stage.show();
@@ -65,7 +76,7 @@ public class Main extends Application {
 			current_difficulty.setText("Current Difficulty : " + difficulty);
 			Pane pane = new Pane();
 			pane.setStyle("-fx-background-color: #FF00FF");
-			pane.getChildren().addAll(title, play, current_difficulty, difficulty_choice);
+			pane.getChildren().addAll(title, play, current_difficulty, difficulty_choice, highscore);
 			scene.setRoot(pane);
 			stage.setScene(scene);
 		});
@@ -76,7 +87,7 @@ public class Main extends Application {
 			current_difficulty.setText("Current Difficulty : " + difficulty);
 			Pane pane = new Pane();
 			pane.setStyle("-fx-background-color: #FF00FF");
-			pane.getChildren().addAll(title, play, current_difficulty, difficulty_choice);
+			pane.getChildren().addAll(title, play, current_difficulty, difficulty_choice, highscore);
 			stage.setScene(new Scene(pane, XMAX, YMAX));
 		});
 		
@@ -86,7 +97,7 @@ public class Main extends Application {
 			current_difficulty.setText("Current Difficulty : " + difficulty);
 			Pane pane = new Pane();
 			pane.setStyle("-fx-background-color: #FF00FF");
-			pane.getChildren().addAll(title, play, current_difficulty, difficulty_choice);
+			pane.getChildren().addAll(title, play, current_difficulty, difficulty_choice, highscore);
 			scene.setRoot(pane);
 			stage.setScene(scene);
 		});
@@ -97,7 +108,7 @@ public class Main extends Application {
 			current_difficulty.setText("Current Difficulty : " + difficulty);
 			Pane pane = new Pane();
 			pane.setStyle("-fx-background-color: #FF00FF");
-			pane.getChildren().addAll(title, play, current_difficulty, difficulty_choice);
+			pane.getChildren().addAll(title, play, current_difficulty, difficulty_choice, highscore);
 			scene.setRoot(pane);
 			stage.setScene(scene);
 		});
@@ -108,7 +119,7 @@ public class Main extends Application {
 			current_difficulty.setText("Current Difficulty : " + difficulty);
 			Pane pane = new Pane();
 			pane.setStyle("-fx-background-color: #FF00FF");
-			pane.getChildren().addAll(title, play, current_difficulty, difficulty_choice);
+			pane.getChildren().addAll(title, play, current_difficulty, difficulty_choice, highscore);
 			scene.setRoot(pane);
 			stage.setScene(scene);
 		});

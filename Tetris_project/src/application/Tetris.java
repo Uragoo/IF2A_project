@@ -1,7 +1,13 @@
 package application;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 import javafx.application.Application;
@@ -35,9 +41,6 @@ public class Tetris extends Application {
 	private static int linesNo = 0;
 	
 	public static void startGame(Stage stage){
-		GRID = new int[XMAX / SIZE][YMAX / SIZE];
-		group = new Pane();
-		scene = new Scene(group, XMAX + 150, YMAX);
 		for (int[] a : GRID) {
 			Arrays.fill(a, 0);
 		}
@@ -66,19 +69,19 @@ public class Tetris extends Application {
 
 		switch(Main.difficulty) {
 		case EASY:
-			movespeed = 1;
+			movespeed = 300;
 			break;
 		case NORMAL:
-			movespeed = 10;
+			movespeed = 250;
 			break;
 		case EXPERT:
-			movespeed = 20;
+			movespeed = 200;
 			break;
 		case HARDCORE:
-			movespeed = 30;
+			movespeed = 150;
 			break;
 		case LEGEND:
-			movespeed = 40;
+			movespeed = 100;
 		}
 		
 		Timer fall = new Timer();
@@ -101,6 +104,24 @@ public class Tetris extends Application {
 							over.setX(10);
 							group.getChildren().add(over);
 							game = false;
+							File doc = new File("highscore.txt");
+							Scanner highscore;
+							try {
+								highscore = new Scanner(doc);
+								if (highscore.nextInt() < score) {
+									FileWriter fw = new FileWriter(doc.getAbsoluteFile());
+									BufferedWriter newscore = new BufferedWriter(fw);
+									newscore.write(""+ score);
+									newscore.close();
+								}
+								highscore.close();
+							} catch (FileNotFoundException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 						}
 						// Exit
 						if (top == 15) {
@@ -116,7 +137,39 @@ public class Tetris extends Application {
 				});
 			}
 		};
-		fall.schedule(task, 0, 300);
+		fall.schedule(task, 0, movespeed);
+		
+		stage.setOnHidden( e -> {
+			File doc = new File("highscore.txt");
+			Scanner highscore;
+			try {
+				highscore = new Scanner(doc);
+				if (highscore.nextInt() < score) {
+					FileWriter fw = new FileWriter(doc.getAbsoluteFile());
+					BufferedWriter newscore = new BufferedWriter(fw);
+					newscore.write(""+ score);
+					newscore.close();
+				}
+				highscore.close();
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			task.cancel();
+			fall.cancel();
+			stage.setScene(null);
+			score = 0;
+			top = 0;
+			linesNo = 0;
+			GRID = new int[XMAX / SIZE][YMAX / SIZE];
+			group = new Pane();
+			scene = new Scene(group, XMAX + 150, YMAX);
+			nextObj = Controller.makeRect();
+			
+		});
 	}
 
 	private static void moveOnKeyPress(Shapes form) {
@@ -436,6 +489,8 @@ public class Tetris extends Application {
 		ArrayList<Node> rects = new ArrayList<Node>();
 		ArrayList<Integer> lines = new ArrayList<Integer>();
 		ArrayList<Node> newrects = new ArrayList<Node>();
+		int full_lines;
+		int last_full_lines = 0;
 		int full = 0;
 		for (int i = 0; i < GRID[0].length; i++) {
 			for (int j = 0; j < GRID.length; j++) {
@@ -444,16 +499,16 @@ public class Tetris extends Application {
 			}
 			if (full == GRID.length)
 			lines.add(i);
-			//lines.add(i + lines.size());
 			full = 0;
 		}
-		if (lines.size() > 0)
+		full_lines = lines.size();
+		if (full_lines > 0) {
 			do {
 				for (Node node : pane.getChildren()) {
 					if (node instanceof Rectangle)
 						rects.add(node);
 				}
-				score += 50;
+				score += 100;
 				linesNo++;
 
 				for (Node node : rects) {
@@ -488,12 +543,19 @@ public class Tetris extends Application {
 				}
 				rects.clear();
 			} while (lines.size() > 0);
+			if (full_lines == 4 && last_full_lines == 4) {
+				score += 800;
+			} else if (full_lines == 4) {
+				score += 400;
+			}
+			
+			last_full_lines = full_lines;
+		}
 	}
 
 	private static void MoveDown(Rectangle rect) {
 		if (rect.getY() + MOVE < YMAX)
 			rect.setY(rect.getY() + MOVE);
-
 	}
 
 	private static void MoveRight(Rectangle rect) {
