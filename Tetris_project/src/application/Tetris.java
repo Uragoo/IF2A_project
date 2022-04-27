@@ -37,10 +37,18 @@ public class Tetris extends Application {
 	public static int score = 0;
 	private static int top = 0;
 	private static boolean game = true;
-	private static Shapes nextObj = Controller.makeRect();
+	private static Shapes nextObj = Controller.newShape();
 	private static int linesNo = 0;
 	
 	public static void startGame(Stage stage){
+		score = 0;
+		top = 0;
+		linesNo = 0;
+		GRID = new int[XMAX / SIZE][YMAX / SIZE];
+		group = new Pane();
+		scene = new Scene(group, XMAX + 150, YMAX);
+		stage.setScene(scene);
+		
 		for (int[] a : GRID) {
 			Arrays.fill(a, 0);
 		}
@@ -62,7 +70,7 @@ public class Tetris extends Application {
 		group.getChildren().addAll(a.a, a.b, a.c, a.d);
 		moveOnKeyPress(a);
 		object = a;
-		nextObj = Controller.makeRect();
+		nextObj = Controller.newShape();
 		stage.setScene(scene);
 		stage.setTitle("TETRIS");
 		stage.show();
@@ -160,15 +168,15 @@ public class Tetris extends Application {
 			}
 			task.cancel();
 			fall.cancel();
-			stage.setScene(null);
-			score = 0;
+			fall.purge();
+			/*score = 0;
 			top = 0;
 			linesNo = 0;
 			GRID = new int[XMAX / SIZE][YMAX / SIZE];
 			group = new Pane();
 			scene = new Scene(group, XMAX + 150, YMAX);
-			nextObj = Controller.makeRect();
-			
+			stage.setScene(scene);
+			nextObj = Controller.newShape();*/
 		});
 	}
 
@@ -205,101 +213,85 @@ public class Tetris extends Application {
 		Rectangle d = form.d;
 		switch (form.getName()) {
 		case "j":
-			if (f == 1 && checkBorder(a, 1, -1) && checkBorder(c, -1, -1) && checkBorder(d, -2, -2)) {
-				MoveRight(form.a);
-				MoveDown(form.a);
-				MoveDown(form.c);
-				MoveLeft(form.c);
-				MoveDown(form.d);
-				MoveDown(form.d);
-				MoveLeft(form.d);
-				MoveLeft(form.d);
-				form.changeShapes();
-				break;
-			}
-			if (f == 2 && checkBorder(a, -1, -1) && checkBorder(c, -1, 1) && checkBorder(d, -2, 2)) {
+			if (f == 1 && checkBorder(a, -1, -1) && checkBorder(c, 1, 1) && checkBorder(d, 2, 0)) {		
 				MoveDown(form.a);
 				MoveLeft(form.a);
-				MoveLeft(form.c);
 				MoveUp(form.c);
-				MoveLeft(form.d);
-				MoveLeft(form.d);
-				MoveUp(form.d);
-				MoveUp(form.d);
+				MoveRight(form.c);
+				MoveRight(form.d);
+				MoveRight(form.d);
 				form.changeShapes();
 				break;
 			}
-			if (f == 3 && checkBorder(a, -1, 1) && checkBorder(c, 1, 1) && checkBorder(d, 2, 2)) {
+			if (f == 2 && checkBorder(a, -1, 1) && checkBorder(c, 1, -1) && checkBorder(d, 0, -2)) {
 				MoveLeft(form.a);
 				MoveUp(form.a);
-				MoveUp(form.c);
+				MoveDown(form.c);
 				MoveRight(form.c);
-				MoveUp(form.d);
-				MoveUp(form.d);
-				MoveRight(form.d);
-				MoveRight(form.d);
+				MoveDown(form.d);
+				MoveDown(form.d);
 				form.changeShapes();
 				break;
 			}
-			if (f == 4 && checkBorder(a, 1, 1) && checkBorder(c, 1, -1) && checkBorder(d, 2, -2)) {
+			if (f == 3 && checkBorder(a, 1, 1) && checkBorder(c, -1, -1) && checkBorder(d, -2, 0)) {
 				MoveUp(form.a);
 				MoveRight(form.a);
-				MoveRight(form.c);
+				MoveLeft(form.c);
 				MoveDown(form.c);
-				MoveRight(form.d);
-				MoveRight(form.d);
-				MoveDown(form.d);
-				MoveDown(form.d);
+				MoveLeft(form.d);
+				MoveLeft(form.d);
+				form.changeShapes();
+				break;
+			}
+			if (f == 4 && checkBorder(a, 1, -1) && checkBorder(c, -1, 1) && checkBorder(d, 0, 2)) {
+				MoveRight(form.a);
+				MoveDown(form.a);
+				MoveUp(form.c);
+				MoveLeft(form.c);
+				MoveUp(form.d);
+				MoveUp(form.d);
 				form.changeShapes();
 				break;
 			}
 			break;
 		case "l":
-			if (f == 1 && checkBorder(a, 1, -1) && checkBorder(c, 1, 1) && checkBorder(b, 2, 2)) {
+			if (f == 1 && checkBorder(a, 1, 1) && checkBorder(c, -1, -1) && checkBorder(d, 0, -2)) {
 				MoveRight(form.a);
-				MoveDown(form.a);
-				MoveUp(form.c);
-				MoveRight(form.c);
-				MoveUp(form.b);
-				MoveUp(form.b);
-				MoveRight(form.b);
-				MoveRight(form.b);
-				form.changeShapes();
-				break;
-			}
-			if (f == 2 && checkBorder(a, -1, -1) && checkBorder(b, 2, -2) && checkBorder(c, 1, -1)) {
-				MoveDown(form.a);
-				MoveLeft(form.a);
-				MoveRight(form.b);
-				MoveRight(form.b);
-				MoveDown(form.b);
-				MoveDown(form.b);
-				MoveRight(form.c);
-				MoveDown(form.c);
-				form.changeShapes();
-				break;
-			}
-			if (f == 3 && checkBorder(a, -1, 1) && checkBorder(c, -1, -1) && checkBorder(b, -2, -2)) {
-				MoveLeft(form.a);
 				MoveUp(form.a);
 				MoveDown(form.c);
 				MoveLeft(form.c);
-				MoveDown(form.b);
-				MoveDown(form.b);
-				MoveLeft(form.b);
-				MoveLeft(form.b);
+				MoveDown(form.d);
+				MoveDown(form.d);
 				form.changeShapes();
 				break;
 			}
-			if (f == 4 && checkBorder(a, 1, 1) && checkBorder(b, -2, 2) && checkBorder(c, -1, 1)) {
-				MoveUp(form.a);
+			if (f == 2 && checkBorder(a, 1, -1) && checkBorder(c, -1, 1) && checkBorder(d, -2, 0)) {
 				MoveRight(form.a);
-				MoveLeft(form.b);
-				MoveLeft(form.b);
-				MoveUp(form.b);
-				MoveUp(form.b);
+				MoveDown(form.a);
 				MoveLeft(form.c);
 				MoveUp(form.c);
+				MoveLeft(form.d);
+				MoveLeft(form.d);
+				form.changeShapes();
+				break;
+			}
+			if (f == 3 && checkBorder(a, -1, -1) && checkBorder(c, 1, 1) && checkBorder(d, 0, 2)) {
+				MoveLeft(form.a);
+				MoveDown(form.a);
+				MoveRight(form.c);
+				MoveUp(form.c);
+				MoveUp(form.d);
+				MoveUp(form.d);
+				form.changeShapes();
+				break;
+			}
+			if (f == 4 && checkBorder(a, -1, 1) && checkBorder(c, 1, -1) && checkBorder(d, 2, 0)) {
+				MoveLeft(form.a);
+				MoveUp(form.a);
+				MoveRight(form.c);
+				MoveDown(form.c);
+				MoveRight(form.d);
+				MoveRight(form.d);
 				form.changeShapes();
 				break;
 			}
@@ -307,23 +299,23 @@ public class Tetris extends Application {
 		case "o":
 			break;
 		case "s":
-			if (f == 1 && checkBorder(a, -1, -1) && checkBorder(c, -1, 1) && checkBorder(d, 0, 2)) {
-				MoveDown(form.a);
-				MoveLeft(form.a);
-				MoveLeft(form.c);
-				MoveUp(form.c);
-				MoveUp(form.d);
-				MoveUp(form.d);
-				form.changeShapes();
-				break;
-			}
-			if (f == 2 && checkBorder(a, 1, 1) && checkBorder(c, 1, -1) && checkBorder(d, 0, -2)) {
-				MoveUp(form.a);
+			if (f == 1 && checkBorder(a, 1, 1) && checkBorder(c, 1, -1) && checkBorder(d, 0, -2)) {
 				MoveRight(form.a);
+				MoveUp(form.a);
 				MoveRight(form.c);
 				MoveDown(form.c);
 				MoveDown(form.d);
 				MoveDown(form.d);
+				form.changeShapes();
+				break;
+			}
+			if (f == 2 && checkBorder(a, 1, -1) && checkBorder(c, -1, -1) && checkBorder(d, -2, 0)) {
+				MoveRight(form.a);
+				MoveDown(form.a);
+				MoveLeft(form.c);
+				MoveDown(form.c);
+				MoveLeft(form.d);
+				MoveLeft(form.d);
 				form.changeShapes();
 				break;
 			}
@@ -337,63 +329,63 @@ public class Tetris extends Application {
 				form.changeShapes();
 				break;
 			}
-			if (f == 4 && checkBorder(a, 1, 1) && checkBorder(c, 1, -1) && checkBorder(d, 0, -2)) {
+			if (f == 4 && checkBorder(a, 1, 1) && checkBorder(c, 1, 1) && checkBorder(d, 2, 0)) {
+				MoveLeft(form.a);
 				MoveUp(form.a);
-				MoveRight(form.a);
 				MoveRight(form.c);
-				MoveDown(form.c);
-				MoveDown(form.d);
-				MoveDown(form.d);
+				MoveUp(form.c);
+				MoveRight(form.d);
+				MoveRight(form.d);
 				form.changeShapes();
 				break;
 			}
 			break;
 		case "t":
-			if (f == 1 && checkBorder(a, 1, 1) && checkBorder(d, -1, -1) && checkBorder(c, -1, 1)) {
-				MoveUp(form.a);
-				MoveRight(form.a);
-				MoveDown(form.d);
-				MoveLeft(form.d);
-				MoveLeft(form.c);
-				MoveUp(form.c);
-				form.changeShapes();
-				break;
-			}
-			if (f == 2 && checkBorder(a, 1, -1) && checkBorder(d, -1, 1) && checkBorder(c, 1, 1)) {
-				MoveRight(form.a);
-				MoveDown(form.a);
-				MoveLeft(form.d);
-				MoveUp(form.d);
-				MoveUp(form.c);
-				MoveRight(form.c);
-				form.changeShapes();
-				break;
-			}
-			if (f == 3 && checkBorder(a, -1, -1) && checkBorder(d, 1, 1) && checkBorder(c, 1, -1)) {
-				MoveDown(form.a);
-				MoveLeft(form.a);
-				MoveUp(form.d);
-				MoveRight(form.d);
-				MoveRight(form.c);
-				MoveDown(form.c);
-				form.changeShapes();
-				break;
-			}
-			if (f == 4 && checkBorder(a, -1, 1) && checkBorder(d, 1, -1) && checkBorder(c, -1, -1)) {
+			if (f == 1 && checkBorder(a, -1, 1) && checkBorder(b, -1, -1) && checkBorder(d, 1, 1)) {
 				MoveLeft(form.a);
 				MoveUp(form.a);
+				MoveLeft(form.b);
+				MoveDown(form.b);
+				MoveRight(form.d);
+				MoveUp(form.d);
+				form.changeShapes();
+				break;
+			}
+			if (f == 2 && checkBorder(a, 1, 1) && checkBorder(b, -1, 1) && checkBorder(d, 1, -1)) {
+				MoveRight(form.a);
+				MoveUp(form.a);
+				MoveLeft(form.b);
+				MoveUp(form.b);
 				MoveRight(form.d);
 				MoveDown(form.d);
-				MoveDown(form.c);
-				MoveLeft(form.c);
+				form.changeShapes();
+				break;
+			}
+			if (f == 3 && checkBorder(a, 1, -1) && checkBorder(b, 1, 1) && checkBorder(d, -1, -1)) {
+				MoveRight(form.a);
+				MoveDown(form.a);
+				MoveRight(form.b);
+				MoveUp(form.b);
+				MoveLeft(form.d);
+				MoveDown(form.d);
+				form.changeShapes();
+				break;
+			}
+			if (f == 4 && checkBorder(a, -1, -1) && checkBorder(b, 1, -1) && checkBorder(d, -1, 1)) {
+				MoveLeft(form.a);
+				MoveDown(form.a);
+				MoveRight(form.b);
+				MoveDown(form.b);
+				MoveLeft(form.d);
+				MoveUp(form.d);
 				form.changeShapes();
 				break;
 			}
 			break;
 		case "z":
-			if (f == 1 && checkBorder(b, 1, 1) && checkBorder(c, -1, 1) && checkBorder(d, -2, 0)) {
-				MoveUp(form.b);
-				MoveRight(form.b);
+			if (f == 1 && checkBorder(a, 1, 1) && checkBorder(c, -1, 1) && checkBorder(d, -2, 0)) {
+				MoveRight(form.a);
+				MoveUp(form.a);
 				MoveLeft(form.c);
 				MoveUp(form.c);
 				MoveLeft(form.d);
@@ -401,83 +393,83 @@ public class Tetris extends Application {
 				form.changeShapes();
 				break;
 			}
-			if (f == 2 && checkBorder(b, -1, -1) && checkBorder(c, 1, -1) && checkBorder(d, 2, 0)) {
-				MoveDown(form.b);
-				MoveLeft(form.b);
+			if (f == 2 && checkBorder(a, 1, -1) && checkBorder(c, 1, 1) && checkBorder(d, 0, 2)) {
+				MoveRight(form.a);
+				MoveDown(form.a);
 				MoveRight(form.c);
-				MoveDown(form.c);
-				MoveRight(form.d);
-				MoveRight(form.d);
-				form.changeShapes();
-				break;
-			}
-			if (f == 3 && checkBorder(b, 1, 1) && checkBorder(c, -1, 1) && checkBorder(d, -2, 0)) {
-				MoveUp(form.b);
-				MoveRight(form.b);
-				MoveLeft(form.c);
 				MoveUp(form.c);
-				MoveLeft(form.d);
-				MoveLeft(form.d);
+				MoveUp(form.d);
+				MoveUp(form.d);
 				form.changeShapes();
 				break;
 			}
-			if (f == 4 && checkBorder(b, -1, -1) && checkBorder(c, 1, -1) && checkBorder(d, 2, 0)) {
-				MoveDown(form.b);
-				MoveLeft(form.b);
+			if (f == 3 && checkBorder(a, -1, -1) && checkBorder(c, 1, -1) && checkBorder(d, 2, 0)) {
+				MoveLeft(form.a);
+				MoveDown(form.a);
 				MoveRight(form.c);
 				MoveDown(form.c);
 				MoveRight(form.d);
 				MoveRight(form.d);
+				form.changeShapes();
+				break;
+			}
+			if (f == 4 && checkBorder(a, -1, 1) && checkBorder(c, -1, -1) && checkBorder(d, 0, -2)) {
+				MoveLeft(form.a);
+				MoveUp(form.a);
+				MoveLeft(form.c);
+				MoveDown(form.c);
+				MoveDown(form.d);
+				MoveDown(form.d);
 				form.changeShapes();
 				break;
 			}
 			break;
 		case "i":
-			if (f == 1 && checkBorder(a, 2, 2) && checkBorder(b, 1, 1) && checkBorder(d, -1, -1)) {
-				MoveUp(form.a);
-				MoveUp(form.a);
+			if (f == 1 && checkBorder(a, 1, 1) && checkBorder(c, -1, -1) && checkBorder(d, -2, -2)) {
 				MoveRight(form.a);
-				MoveRight(form.a);
-				MoveUp(form.b);
-				MoveRight(form.b);
-				MoveDown(form.d);
+				MoveUp(form.a);
+				MoveLeft(form.c);
+				MoveDown(form.c);
 				MoveLeft(form.d);
-				form.changeShapes();
-				break;
-			}
-			if (f == 2 && checkBorder(a, -2, -2) && checkBorder(b, -1, -1) && checkBorder(d, 1, 1)) {
-				MoveDown(form.a);
-				MoveDown(form.a);
-				MoveLeft(form.a);
-				MoveLeft(form.a);
-				MoveDown(form.b);
-				MoveLeft(form.b);
-				MoveUp(form.d);
-				MoveRight(form.d);
-				form.changeShapes();
-				break;
-			}
-			if (f == 3 && checkBorder(a, 2, 2) && checkBorder(b, 1, 1) && checkBorder(d, -1, -1)) {
-				MoveUp(form.a);
-				MoveUp(form.a);
-				MoveRight(form.a);
-				MoveRight(form.a);
-				MoveUp(form.b);
-				MoveRight(form.b);
-				MoveDown(form.d);
 				MoveLeft(form.d);
+				MoveDown(form.d);
+				MoveDown(form.d);
 				form.changeShapes();
 				break;
 			}
-			if (f == 4 && checkBorder(a, -2, -2) && checkBorder(b, -1, -1) && checkBorder(d, 1, 1)) {
+			if (f == 2 && checkBorder(a, 1, -1) && checkBorder(c, -1, 1) && checkBorder(d, -2, 2)) {
+				MoveRight(form.a);
 				MoveDown(form.a);
-				MoveDown(form.a);
-				MoveLeft(form.a);
-				MoveLeft(form.a);
-				MoveDown(form.b);
-				MoveLeft(form.b);
+				MoveLeft(form.c);
+				MoveUp(form.c);
+				MoveLeft(form.d);
+				MoveLeft(form.d);
 				MoveUp(form.d);
+				MoveUp(form.d);
+				form.changeShapes();
+				break;
+			}
+			if (f == 3 && checkBorder(a, -1, -1) && checkBorder(c, 1, 1) && checkBorder(d, 2, 2)) {
+				MoveLeft(form.a);
+				MoveDown(form.a);
+				MoveRight(form.c);
+				MoveUp(form.c);
 				MoveRight(form.d);
+				MoveRight(form.d);
+				MoveUp(form.d);
+				MoveUp(form.d);
+				form.changeShapes();
+				break;
+			}
+			if (f == 4 && checkBorder(a, -1, 1) && checkBorder(c, 1, -1) && checkBorder(d, 2, -2)) {
+				MoveLeft(form.a);
+				MoveUp(form.a);
+				MoveRight(form.c);
+				MoveDown(form.c);
+				MoveRight(form.d);
+				MoveRight(form.d);
+				MoveDown(form.d);
+				MoveDown(form.d);
 				form.changeShapes();
 				break;
 			}
@@ -583,7 +575,7 @@ public class Tetris extends Application {
 			RemoveRows(group);
 
 			Shapes a = nextObj;
-			nextObj = Controller.makeRect();
+			nextObj = Controller.newShape();
 			object = a;
 			group.getChildren().addAll(a.a, a.b, a.c, a.d);
 			moveOnKeyPress(a);

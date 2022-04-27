@@ -3,6 +3,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class Shapes {
+	public static final int SIZE = Tetris.SIZE;
+	public static int XMAX = Tetris.XMAX;
+	public static int YMAX = Tetris.YMAX;
 	Rectangle a;
 	Rectangle b;
 	Rectangle c;
@@ -19,38 +22,12 @@ public class Shapes {
 		this.d = d;
 	}
 	
-	public Shapes (Rectangle a, Rectangle b, Rectangle c, Rectangle d, String name) {
+	public Shapes (Rectangle a, Rectangle b, Rectangle c, Rectangle d, String name, Color color) {
 		this.a = a;
 		this.b = b;
 		this.c = c;
 		this.d = d;
 		this.name = name;
-	
-	
-		//set color
-		switch (name) {
-			case "j":
-				color = Color.SLATEGRAY;
-				break;
-			case "l":
-				color = Color.DARKGOLDENROD;
-				break;
-			case "o":
-				color = Color.INDIANRED;
-				break;
-			case "s":
-				color = Color.FORESTGREEN;
-				break;
-			case "t":
-				color = Color.CADETBLUE;
-				break;
-			case "z":
-				color = Color.HOTPINK;
-				break;
-			case "i":
-				color = Color.SANDYBROWN;
-				break;
-		}
 		
 		this.a.setFill(color);
 		this.b.setFill(color);
