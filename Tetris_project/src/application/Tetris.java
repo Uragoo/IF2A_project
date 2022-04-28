@@ -41,6 +41,7 @@ public class Tetris extends Application {
 	private static int linesNo = 0;
 	
 	public static void startGame(Stage stage){
+		game = true;
 		score = 0;
 		top = 0;
 		linesNo = 0;
