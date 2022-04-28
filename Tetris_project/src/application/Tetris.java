@@ -91,8 +91,7 @@ public class Tetris extends Application {
 		case LEGEND:
 			movespeed = 100;
 		}
-		
-		Timer fall = new Timer();
+
 		TimerTask task = new TimerTask() {
 			public void run() {
 				Platform.runLater(new Runnable() {
@@ -145,8 +144,8 @@ public class Tetris extends Application {
 				});
 			}
 		};
-		fall.schedule(task, 0, movespeed);
-		
+		new Reminder(movespeed, task);
+
 		stage.setOnHidden( e -> {
 			File doc = new File("highscore.txt");
 			Scanner highscore;
@@ -160,23 +159,19 @@ public class Tetris extends Application {
 				}
 				highscore.close();
 			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			task.cancel();
-			fall.cancel();
-			fall.purge();
-			/*score = 0;
+			Reminder.stopIt();
+			score = 0;
 			top = 0;
 			linesNo = 0;
 			GRID = new int[XMAX / SIZE][YMAX / SIZE];
 			group = new Pane();
 			scene = new Scene(group, XMAX + 150, YMAX);
 			stage.setScene(scene);
-			nextObj = Controller.newShape();*/
+			nextObj = Controller.newShape();
 		});
 	}
 
